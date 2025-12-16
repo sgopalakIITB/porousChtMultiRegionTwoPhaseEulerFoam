@@ -1,0 +1,78 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  v2506
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      porousZones;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Example configuration for porous zones in plate heat exchanger
+// Copy this file to constant/porousZones and modify according to your case
+
+// Offset-strip fin zone
+offsetStripZone
+{
+    // Porosity (0-1, where 1 = no obstruction)
+    porosity            0.8;
+    
+    // Permeability tensor [m^2]
+    // For anisotropic media, specify full tensor
+    permeability        (1e-6 0 0 0 1e-7 0 0 0 1e-7);
+    
+    // Forchheimer coefficient [1/m]
+    Cf                  1000;
+    
+    // Beta direction parameter (0.1-0.8 for offset-strip fins)
+    betaDirection       0.3;
+    
+    // Characteristic length [m] (hydraulic diameter)
+    characteristicLength 0.002;
+}
+
+// Dimple zone
+dimpleZone
+{
+    // Porosity
+    porosity            0.85;
+    
+    // Permeability tensor [m^2]
+    permeability        (5e-6 0 0 0 5e-7 0 0 0 5e-7);
+    
+    // Forchheimer coefficient [1/m]
+    Cf                  800;
+    
+    // Beta direction parameter (>=0.8 for dimples)
+    betaDirection       0.9;
+    
+    // Characteristic length [m]
+    characteristicLength 0.003;
+}
+
+// Smooth channel zone (for comparison)
+smoothZone
+{
+    // Porosity (essentially 1 for smooth channel)
+    porosity            0.99;
+    
+    // High permeability for smooth flow
+    permeability        (1e-3 0 0 0 1e-3 0 0 0 1e-3);
+    
+    // Low Forchheimer coefficient
+    Cf                  10;
+    
+    // Beta parameter (<0.1 for smooth channel)
+    betaDirection       0.05;
+    
+    // Characteristic length [m]
+    characteristicLength 0.005;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

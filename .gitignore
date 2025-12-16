@@ -1,0 +1,20 @@
+# OpenFOAM build artifacts
+Make/darwin*
+Make/linux*
+*.dep
+*.o
+*.so
+*.a
+
+# Log files
+*.log
+*.txt
+log.*
+
+# Temporary files
+*.swp
+*~
+.DS_Store
+
+# Build directories
+lnInclude/
