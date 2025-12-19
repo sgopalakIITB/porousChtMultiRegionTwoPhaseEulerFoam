@@ -5,7 +5,7 @@
     \\  /    A nd           | www.openfoam.com
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
-    Copyright (C) 2011-2017 OpenFOAM Foundation
+    Copyright (C) 2011-2013 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -23,36 +23,28 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Description
+    Calculates and outputs the mean and maximum Diffusion Numbers for the solid
+    regions
+
 \*---------------------------------------------------------------------------*/
 
-#include "solidRegionDiffNo.H"
-#include "surfaceInterpolate.H"
+#ifndef solidRegionDiffNo_H
+#define solidRegionDiffNo_H
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "fvMesh.H"
 
-Foam::scalar Foam::solidRegionDiffNo
-(
-    const fvMesh& mesh,
-    const Time& runTime,
-    const volScalarField& Cprho,
-    const volScalarField& kappa
-)
+namespace Foam
 {
-    surfaceScalarField kapparhoCpbyDelta
+    scalar solidRegionDiffNo
     (
-        sqr(mesh.surfaceInterpolation::deltaCoeffs())
-       *fvc::interpolate(kappa)
-       /fvc::interpolate(Cprho)
+        const fvMesh& mesh,
+        const Time& runTime,
+        const volScalarField& Cprho,
+        const volScalarField& kappa
     );
-
-    const scalar DiNum = max(kapparhoCpbyDelta).value()*runTime.deltaTValue();
-    const scalar meanDiNum =
-        average(kapparhoCpbyDelta).value()*runTime.deltaTValue();
-
-    Info<< "Region: " << mesh.name() << " Diffusion Number mean: " << meanDiNum
-        << " max: " << DiNum << endl;
-
-    return DiNum;
 }
+
+#endif
 
 // ************************************************************************* //

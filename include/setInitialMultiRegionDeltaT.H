@@ -5,7 +5,7 @@
     \\  /    A nd           | www.openfoam.com
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
-    Copyright (C) 2011-2017 OpenFOAM Foundation
+    Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -23,36 +23,38 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Global
+    setInitialMultiRegionDeltaT
+
+Description
+    Set the initial timestep for the CHT MultiRegion solver.
+
 \*---------------------------------------------------------------------------*/
 
-#include "solidRegionDiffNo.H"
-#include "surfaceInterpolate.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-Foam::scalar Foam::solidRegionDiffNo
-(
-    const fvMesh& mesh,
-    const Time& runTime,
-    const volScalarField& Cprho,
-    const volScalarField& kappa
-)
+if (adjustTimeStep)
 {
-    surfaceScalarField kapparhoCpbyDelta
-    (
-        sqr(mesh.surfaceInterpolation::deltaCoeffs())
-       *fvc::interpolate(kappa)
-       /fvc::interpolate(Cprho)
-    );
+    if ((runTime.timeIndex() == 0) && ((CoNum > SMALL) || (DiNum > SMALL)))
+    {
+        if (CoNum < SMALL)
+        {
+            CoNum = SMALL;
+        }
 
-    const scalar DiNum = max(kapparhoCpbyDelta).value()*runTime.deltaTValue();
-    const scalar meanDiNum =
-        average(kapparhoCpbyDelta).value()*runTime.deltaTValue();
+        if (DiNum < SMALL)
+        {
+            DiNum = SMALL;
+        }
 
-    Info<< "Region: " << mesh.name() << " Diffusion Number mean: " << meanDiNum
-        << " max: " << DiNum << endl;
-
-    return DiNum;
+        runTime.setDeltaT
+        (
+            Foam::min
+            (
+                Foam::min(maxCo/CoNum, maxDi/DiNum)*runTime.deltaTValue(),
+                Foam::min(runTime.deltaTValue(), maxDeltaT)
+            )
+        );
+        Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
+    }
 }
 
 // ************************************************************************* //

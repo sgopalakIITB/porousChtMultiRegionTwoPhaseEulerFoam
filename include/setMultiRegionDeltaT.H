@@ -5,7 +5,7 @@
     \\  /    A nd           | www.openfoam.com
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
-    Copyright (C) 2011-2017 OpenFOAM Foundation
+    Copyright (C) 2011 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -23,36 +23,44 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Global
+    setMultiRegionDeltaT
+
+Description
+    Reset the timestep to maintain a constant maximum courant and
+    diffusion Numbers. Reduction of time-step is immediate, but
+    increase is damped to avoid unstable oscillations.
+
 \*---------------------------------------------------------------------------*/
 
-#include "solidRegionDiffNo.H"
-#include "surfaceInterpolate.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-Foam::scalar Foam::solidRegionDiffNo
-(
-    const fvMesh& mesh,
-    const Time& runTime,
-    const volScalarField& Cprho,
-    const volScalarField& kappa
-)
+if (adjustTimeStep)
 {
-    surfaceScalarField kapparhoCpbyDelta
+    if (CoNum == -GREAT)
+    {
+        CoNum = SMALL;
+    }
+
+    if (DiNum == -GREAT)
+    {
+        DiNum = SMALL;
+    }
+
+    scalar maxDeltaTFluid = maxCo/(CoNum + SMALL);
+    scalar maxDeltaTSolid = maxDi/(DiNum + SMALL);
+
+    const scalar deltaTFluid =
+        Foam::min(Foam::min(maxDeltaTFluid, 1.0 + 0.1*maxDeltaTFluid), 1.2);
+
+    runTime.setDeltaT
     (
-        sqr(mesh.surfaceInterpolation::deltaCoeffs())
-       *fvc::interpolate(kappa)
-       /fvc::interpolate(Cprho)
+        Foam::min
+        (
+            Foam::min(deltaTFluid, maxDeltaTSolid)*runTime.deltaTValue(),
+            maxDeltaT
+        )
     );
 
-    const scalar DiNum = max(kapparhoCpbyDelta).value()*runTime.deltaTValue();
-    const scalar meanDiNum =
-        average(kapparhoCpbyDelta).value()*runTime.deltaTValue();
-
-    Info<< "Region: " << mesh.name() << " Diffusion Number mean: " << meanDiNum
-        << " max: " << DiNum << endl;
-
-    return DiNum;
+    Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
 }
 
 // ************************************************************************* //

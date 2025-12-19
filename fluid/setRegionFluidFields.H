@@ -30,12 +30,6 @@
     volScalarField& rho2 = thermo2.rho();
     const volScalarField& psi2 = thermo2.psi();
 
-    // Turbulence model references
-    phaseCompressibleTurbulenceModel& turbulence1 =
-        const_cast<phaseCompressibleTurbulenceModel&>(phase1.turbulence());
-    phaseCompressibleTurbulenceModel& turbulence2 =
-        const_cast<phaseCompressibleTurbulenceModel&>(phase2.turbulence());
-
     const IOMRFZoneList& MRF = fluid.MRF();
     fv::options& fvOptions = fluid.fvOptions();
 

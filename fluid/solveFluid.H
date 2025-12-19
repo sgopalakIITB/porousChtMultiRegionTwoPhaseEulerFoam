@@ -3,18 +3,16 @@ if (finalIter)
     mesh.data().setFinalIteration(true);
 }
 
-#include "EEqns.H" //energy equation with porous
-#include "EEqnPorous.H" //
-#include "pEqn.H"
+// Momentum equations must be defined before pressure equation
 #include "UEqns.H"
-#include "UEqnPorous.H"
+#include "pEqn.H"
+#include "EEqns.H" //energy equation with porous
 //#include "YEqns.H" // this is used for species transport
 
 fluid.correctKinematics();
 
-    // Update alpha's for new U
-    fluid.correctTurbulence();
-}
+// Update alpha's for new U
+fluid.correctTurbulence();
 
 if (finalIter)
 {

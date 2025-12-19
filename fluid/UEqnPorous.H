@@ -44,7 +44,7 @@ phaseSystem::momentumTransferTable& momentumTransfer = momentumTransferPtr();
     );
 
     volVectorField& porousSource1 = tPorousSource1.ref();
-    const volScalarField mu1 = turbulence1.mu();
+    auto mu1 = thermo1.mu();
 
     forAll(mesh.cells(), cellI)
     {
@@ -107,7 +107,7 @@ phaseSystem::momentumTransferTable& momentumTransfer = momentumTransferPtr();
     );
 
     volVectorField& porousSource2 = tPorousSource2.ref();
-    const volScalarField mu2 = turbulence2.mu();
+    auto mu2 = thermo2.mu();
 
     forAll(mesh.cells(), cellI)
     {

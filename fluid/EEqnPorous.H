@@ -18,8 +18,8 @@ for (int Ecorr = 0; Ecorr < nEnergyCorrectors; Ecorr++)
         volScalarField& he1 = thermo1.he();
 
         // porous-enhanced thermal diffusivity
-        volScalarField alphaEffPorous1 =
-            turbulence1.alphaEff()*porosity[0];
+        auto alphaEffPorous1 =
+            thermo1.alphahe()*porosity[0];
 
         // turbulator heat source
         volScalarField heatSource1
@@ -58,7 +58,7 @@ for (int Ecorr = 0; Ecorr < nEnergyCorrectors; Ecorr++)
         );
 
         // replace diffusion with porous-corrected version
-        E1Eqn -= fvm::laplacian(turbulence1.alphaEff(), he1);
+        E1Eqn -= fvm::laplacian(thermo1.alphahe(), he1);
         E1Eqn += fvm::laplacian(alphaEffPorous1, he1);
 
         E1Eqn.relax();
@@ -77,8 +77,8 @@ for (int Ecorr = 0; Ecorr < nEnergyCorrectors; Ecorr++)
     {
         volScalarField& he2 = thermo2.he();
 
-        volScalarField alphaEffPorous2 =
-            turbulence2.alphaEff()*porosity[1];
+        auto alphaEffPorous2 =
+            thermo2.alphahe()*porosity[1];
 
         volScalarField heatSource2
         (
@@ -114,7 +114,7 @@ for (int Ecorr = 0; Ecorr < nEnergyCorrectors; Ecorr++)
           + fvOptions(alpha2*porosity[1], rho2, he2)
         );
 
-        E2Eqn -= fvm::laplacian(turbulence2.alphaEff(), he2);
+        E2Eqn -= fvm::laplacian(thermo2.alphahe(), he2);
         E2Eqn += fvm::laplacian(alphaEffPorous2, he2);
 
         E2Eqn.relax();

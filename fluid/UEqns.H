@@ -43,13 +43,13 @@ volVectorField porousSource2
     // ---------------------------------------------------------
 
     // dynamic viscosity of phase 1
-    const volScalarField mu1 = turbulence1.mu();
+    auto mu1 = thermo1.mu();
 
     // Darcy:  -mu/K * U
-    volVectorField darcy1 = -mu1 * (inv(permeability[0]) & U1);
+    auto darcy1 = -mu1 * (inv(permeability[0]) & U1);
 
     // Forchheimer: -Cf * rho * |U| * U
-    volVectorField forch1 = -Cf[0] * rho1 * mag(U1) * U1;
+    auto forch1 = -Cf[0] * rho1 * mag(U1) * U1;
 
     // Turbulator directional source
     volVectorField turbulatorSource1
@@ -93,10 +93,10 @@ volVectorField porousSource2
     // === Phase 2 porous momentum source terms (added) ===
     // ---------------------------------------------------------
 
-    const volScalarField mu2 = turbulence2.mu();
+    auto mu2 = thermo2.mu();
 
-    volVectorField darcy2 = -mu2 * (inv(permeability[1]) & U2);
-    volVectorField forch2 = -Cf[1] * rho2 * mag(U2) * U2;
+    auto darcy2 = -mu2 * (inv(permeability[1]) & U2);
+    auto forch2 = -Cf[1] * rho2 * mag(U2) * U2;
 
     volVectorField turbulatorSource2
     (
