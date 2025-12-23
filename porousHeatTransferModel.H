@@ -16,7 +16,7 @@
 
 #include "fvCFD.H"
 #include "rhoThermo.H"
-#include "plateHeatExchangerCorrelations.H"
+#include "correlations/plateHeatExchangerCorrelations.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

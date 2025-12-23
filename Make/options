@@ -24,9 +24,10 @@ EXE_INC = \
     -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/phaseCompressible/lnInclude \
     -I$(LIB_SRC)/regionModels/regionModel/lnInclude \
-    -I/Users/sgopalak/OpenFOAM/sgopalak-v2506/lib/porousHeatTransferModels/lnInclude
+    -I$(FOAM_USER_LIBBIN)/porousHeatTransferModels/lnInclude
 
 EXE_LIBS = \
+    -L$(FOAM_USER_LIBBIN) \
     -lporousHeatTransferModels \
     -lfiniteVolume \
     -lfvOptions \

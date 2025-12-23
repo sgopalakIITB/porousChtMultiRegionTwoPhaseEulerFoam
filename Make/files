@@ -1,5 +1,6 @@
 derivedFvPatchFields/turbulentTemperatureTwoPhaseRadCoupledMixed/turbulentTemperatureTwoPhaseRadCoupledMixedFvPatchScalarField.C
 solid/solidRegionDiffNo.C
+porousHeatTransferModel.C
 porousChtMultiRegionTwoPhaseEulerFoam.C
 
-EXE = $(FOAM_APPBIN)/porousChtMultiRegionTwoPhaseEulerFoam
+EXE = $(FOAM_USER_APPBIN)/porousChtMultiRegionTwoPhaseEulerFoam
